@@ -69,5 +69,22 @@ router.post("/login", async (req, res) => {
   }
 })
 
+router.delete("/:email", async (req, res) => {
+  const { email } = req.params
+
+  try {
+    const user = await User.findByIdAndDelete(email)
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" })
+    }
+
+    res.json({ message: "User deleted successfully" })
+
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+})
+
 
 export default router
