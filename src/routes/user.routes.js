@@ -13,14 +13,14 @@ router.get("/", async (req, res) => {
       return res.status(204).json({ message: "No users found" })
     }
 
-    res.json(books)
+    res.json(users)
 
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
 })
 
-router.post("/", async (req, res) => {
+router.post("/register", async (req, res) => {
   const { name, surname, email, password } = req?.body
 
   if (!name || !surname || !email || !password) {
@@ -43,7 +43,33 @@ router.post("/", async (req, res) => {
   }
 })
 
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body
 
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" })
+  }
+
+  try {
+    const user = await User.findOne({ email })
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" })
+    }
+
+    const isMatch = await user.comparePassword(password)
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid email or password" })
+    }
+
+    // Generar un token JWT
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" })
+
+    res.json({ token })
+
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+})
 
 
 export default router

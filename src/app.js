@@ -9,11 +9,11 @@ const app = express()
 app.use(bodyParser.json()) // Parsear el body a JSON
 
 // Conectaremos la base de datos:
-mongoose.connect(process.env.MONGO_URL, { dbName: process.env.MONGO_DB_NAME })
+const mongoURL = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@mongodb:27017/${process.env.MONGO_DB_NAME}?authSource=admin`;
+mongoose.connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection
 
 app.use("/users", userRoutes)
-
 
 const port = process.env.PORT || 3000
 

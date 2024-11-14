@@ -16,7 +16,11 @@ services:
     build: .
     restart: always
     environment:
-      MONGO_URI: mongodb://mongodb:27017/users
+      - MONGO_URL=mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/${MONGO_DB_NAME}
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASS=${MONGO_PASS}
+      - MONGO_DB_NAME=${MONGO_DB_NAME}
+      - PORT=${PORT}
     ports:
       - 3000:3000
     depends_on:
