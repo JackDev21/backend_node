@@ -69,11 +69,11 @@ router.post("/login", async (req, res) => {
   }
 })
 
-router.delete("/:email", async (req, res) => {
-  const { email } = req.params
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params
 
   try {
-    const user = await User.findByIdAndDelete(email)
+    const user = await User.findByIdAndDelete(id)
 
     if (!user) {
       return res.status(404).json({ message: "User not found" })
