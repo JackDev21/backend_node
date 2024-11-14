@@ -7,6 +7,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
     volumes:
       - ./mongo:/data/db
+      - ./mongo-init/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
     ports:
       - 27017:27017
 
@@ -14,7 +15,7 @@ services:
     build: .
     restart: always
     environment:
-      - MONGO_URL=mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/${MONGO_DB_NAME}
+      - MONGO_URL=mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/${MONGO_DB_NAME}?authSource=admin
       - MONGO_USER=${MONGO_USER}
       - MONGO_PASS=${MONGO_PASS}
       - MONGO_DB_NAME=${MONGO_DB_NAME}
