@@ -56,15 +56,13 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid email or password" })
     }
 
-    const isMatch = await user.comparePassword(password)
+    const isMatch = user.password == password
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" })
     }
 
-    // Generar un token JWT
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" })
 
-    res.json({ token })
+    res.json({ message: "Logged in" })
 
   } catch (error) {
     res.status(500).json({ message: error.message })
