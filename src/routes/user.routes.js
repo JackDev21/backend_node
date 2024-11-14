@@ -1,34 +1,9 @@
 import express from "express"
-import Book from "../models/book.model.js"
+import User from "../models/user.model.js"
 
 const router = express.Router()
 
-//MIDDLEWARE
-const getBook = async (req, res, next) => {
-  let book
-  const { id } = req.params
 
-  if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-    return res.status(400).json({ message: "Invalid ID" })
-  }
-
-  try {
-    book = await Book.findById(id)
-
-    if (!book) {
-      return res.status(404).json({ message: "Book not found" })
-    }
-
-  } catch (error) {
-    return res.status(500).json({ message: error.message })
-  }
-
-
-  res.book = book
-  next()
-}
-
-// Obtener todos los libros
 router.get("/", async (req, res) => {
   try {
     const books = await Book.find()
@@ -45,36 +20,35 @@ router.get("/", async (req, res) => {
   }
 })
 
-// Crear un libro
 router.post("/", async (req, res) => {
-  const { title, author, genre, publication_date } = req?.body
+  const { name, surname, email, password } = req?.body
 
-  if (!title || !author || !genre || !publication_date) {
+  if (!name || !surname || !email || !password) {
     return res.status(400).json({ message: "All fields are required" })
   }
 
-  const book = new Book({
-    title,
-    author,
-    genre,
-    publication_date,
+  const user = new User({
+    name,
+    surname,
+    email,
+    password,
   })
 
   try {
-    const newBook = await book.save()
-    res.status(201).json(newBook)
+    const newUser = await user.save()
+    res.status(201).json(newUser)
 
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
 })
 
-// Obtener un libro
+
 router.get("/:id", getBook, async (req, res) => {
   res.json(res.book)
 })
 
-// Actualizar un libro
+
 
 router.put("/:id", getBook, async (req, res) => {
   try {
