@@ -4,7 +4,7 @@ import User from "../models/user.model.js"
 const router = express.Router()
 
 
-router.get("/:id", async (req, res) => {
+router.get("/user/:id", async (req, res) => {
 
   const { id } = req.params
 
