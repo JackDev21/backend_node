@@ -4,16 +4,19 @@ import User from "../models/user.model.js"
 const router = express.Router()
 
 
-router.get("/", async (req, res) => {
-  try {
-    const users = await User.find()
-    console.log("GET ALL", users)
+router.get("/:id", async (req, res) => {
 
-    if (users.length === 0) {
+  const { id } = req.params
+
+  try {
+    const user = await User.findById(id)
+
+
+    if (!user) {
       return res.status(204).json({ message: "No users found" })
     }
 
-    res.json(users)
+    res.json(user)
 
   } catch (error) {
     res.status(500).json({ message: error.message })
